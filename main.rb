@@ -18,22 +18,22 @@ ENTRANCE = 9
 initialize_screen
 
 loop do
-	show_menu
-	game = Game.new
-	loop do
-		show_map(game.maps[game.current_map])
-		result = game.play_turn
-		if result.first == "game over"
-			game.game_over
-			break
-		elsif result.first == "change map"
-			game.clear_current_map
-			game.current_map = result[1]
-			game.user_x = result[2]
-			game.user_y = result[3]
-			game.place_user
-			game.place_monster
-		end
-	end
+  show_menu
+  game = Game.new
+  loop do
+    show_map(game.maps[game.current_map])
+    result = game.play_turn
+    if result.first == "game over"
+      game.game_over
+      break
+    elsif result.first == "change map"
+      game.clear_current_map
+      game.current_map = result[1]
+      game.user_x = result[2]
+      game.user_y = result[3]
+      game.place_user
+      game.place_monster
+    end
+  end
 end
 getch
