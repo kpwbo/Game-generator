@@ -39,7 +39,7 @@ class Game
   def place_monster
     loop do
       cell = @maps[@current_map].cells.sample.sample
-      if cell.status == EMPTY
+      if cell.status == GROUND
         @monster_x = cell.coord.x
         @monster_y = cell.coord.y
         break
@@ -49,11 +49,11 @@ class Game
   end
 
   def clear_user
-    @maps[@current_map].cells[@user_x][@user_y].status = EMPTY
+    @maps[@current_map].cells[@user_x][@user_y].status = GROUND
   end
 
   def clear_monster
-    @maps[@current_map].cells[@monster_x][@monster_y].status = EMPTY
+    @maps[@current_map].cells[@monster_x][@monster_y].status = GROUND
   end
 
   def clear_current_map
@@ -80,7 +80,7 @@ class Game
     next_user_y = MAX_SIZE - next_user_y if next_user_y >= MAX_SIZE
     # Check if movement is possible
     case @maps[@current_map].cells[next_user_x][next_user_y].status
-      when EMPTY
+      when GROUND
         clear_user
         @user_x = next_user_x
         @user_y = next_user_y
@@ -155,7 +155,7 @@ class Game
         break if new_monster.status != WALL
         new_monster = monster_possibilities.sample
       }
-      @maps[@current_map].cells[@monster_x][@monster_y].status = EMPTY
+      @maps[@current_map].cells[@monster_x][@monster_y].status = GROUND
       previous_monster_x = @monster_x
       previous_monster_y = @monster_y
       @monster_x = new_monster.coord.x

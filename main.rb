@@ -4,16 +4,16 @@ MAX_SIZE = 24 # even number, the map is a "square"
 MONSTER_MOVEMENT_PER_TURN = 1 # number of steps taken by the monster every turn. If 0, the monster doesn't move.
 
 # Do not change these ! To change how they look like, check the "show_map(map)" function in curses_stuff.rb
-WALL = 0
-EMPTY = 1
-GROUND = 2
-V_BORDER = 3
-H_BORDER = 4
-C_BORDER = 5
-USER = 6
-EXIT = 7
-MONSTER = 8
-ENTRANCE = 9
+WALL_CHAR = "#"
+EMPTY_CHAR = " "
+GROUND_CHAR = "."
+V_BORDER_CHAR = "#"
+H_BORDER_CHAR = "#"
+C_BORDER_CHAR = "#"
+USER_CHAR = "@"
+EXIT_CHAR = "x"
+MONSTER_CHAR = "O"
+ENTRANCE_CHAR = "!"
 
 initialize_screen
 

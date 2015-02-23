@@ -19,16 +19,16 @@ def show_map(map)
     setpos(i, 30)
     row.each do |cell|
       case cell.status
-        when 0 then addstr("#") # WALL
-        when 1 then addstr(" ") # EMPTY
-        when 2 then addstr(".") # GROUND
-        when 3 then addstr("#") # V_BORDER
-        when 4 then addstr("#") # H_BORDER
-        when 5 then addstr("#") # C_BORDER
-        when 6 then addstr("@") # EXPLORER
-        when 7 then addstr("x") # EXIT
-        when 8 then addstr("O") # ENEMY
-        when 9 then addstr("!") # ENTRANCE
+        when 0 then addstr(WALL_CHAR)
+        when 1 then addstr(EMPTY_CHAR)
+        when 2 then addstr(GROUND_CHAR)
+        when 3 then addstr(V_BORDER_CHAR)
+        when 4 then addstr(H_BORDER_CHAR)
+        when 5 then addstr(C_BORDER_CHAR)
+        when 6 then addstr(USER_CHAR)
+        when 7 then addstr(EXIT_CHAR)
+        when 8 then addstr(MONSTER_CHAR)
+        when 9 then addstr(ENTRANCE_CHAR)
       end
     end
     addstr("\n")

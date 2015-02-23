@@ -15,7 +15,7 @@ class Map
   end
 
   def set_empty(cell)
-    @cells[cell.coord.x][cell.coord.y].status = EMPTY
+    @cells[cell.coord.x][cell.coord.y].status = GROUND
   end
 
   def clear_map
@@ -65,10 +65,23 @@ class Map
       @exits[[current_cell.coord.x, current_cell.coord.y]] = 0
       clear_map
     end
-    cells.first.each { |cell| cell.status = EXIT if cell.status == EMPTY }
-    cells.last.each { |cell| cell.status = EXIT if cell.status == EMPTY }
-    cells.each { |row| row.first.status = EXIT if row.first.status == EMPTY }
-    cells.each { |row| row.last.status = EXIT if row.last.status == EMPTY }
+    cells.first.each { |cell| cell.status = EXIT if cell.status == GROUND }
+    cells.last.each { |cell| cell.status = EXIT if cell.status == GROUND }
+    cells.each { |row| row.first.status = EXIT if row.first.status == GROUND }
+    cells.each { |row| row.last.status = EXIT if row.last.status == GROUND }
+    cells.each { |row|
+      row.each { |cell|
+        should_change = true
+        (-1..1).each { |i|
+          (-1..1).each { |j|
+            break if cell.coord.x+i == MAX_SIZE
+            next if cell.coord.y+j == MAX_SIZE 
+            should_change = false if cells[cell.coord.x+i][cell.coord.y+j].status == GROUND && !(i == 0 && j == 0)
+          }
+        }
+        cell.status = EMPTY if should_change
+      }
+    }
   end
 
 end
