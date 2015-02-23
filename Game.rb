@@ -66,6 +66,7 @@ class Game
     next_user_y = @user_y
     # Get user input
     cmd = getch
+    $time = Time.new
     case cmd
       when KEY_UP then next_user_x -= 1
       when KEY_DOWN then next_user_x += 1
@@ -82,6 +83,8 @@ class Game
     case @maps[@current_map].cells[next_user_x][next_user_y].status
       when GROUND
         clear_user
+        setpos(@user_x, 30+@user_y)
+        addstr(GROUND_CHAR)
         @user_x = next_user_x
         @user_y = next_user_y
         place_user
@@ -111,7 +114,7 @@ class Game
             next_door_x = next_user_x
             next_door_y = 0
           end
-          @maps[next_map_id].generate_path(next_user_x, next_user_y, rand(1..2), true, next_door_x, next_door_y)
+          @maps[next_map_id].generate_path(next_user_x, next_user_y, rand(2..3), true, next_door_x, next_door_y)
           @maps[next_map_id].exits[[next_door_x, next_door_y]] = @current_map
           @maps[next_map_id].cells[next_door_x][next_door_y].status = EXIT
         else
@@ -158,8 +161,12 @@ class Game
       @maps[@current_map].cells[@monster_x][@monster_y].status = GROUND
       previous_monster_x = @monster_x
       previous_monster_y = @monster_y
+      setpos(@monster_x, 30+@monster_y)
+      addstr(GROUND_CHAR)
       @monster_x = new_monster.coord.x
       @monster_y = new_monster.coord.y
+      setpos(@monster_x, 30+@monster_y)
+      addstr(MONSTER_CHAR)
       @maps[@current_map].cells[@monster_x][@monster_y].status = MONSTER
       if @monster_x == @user_x && @monster_y == @user_y
         result[0] = "game over"
@@ -169,7 +176,7 @@ class Game
 
   def play_turn
     result = []
-    print_map
+    #print_map
     move_user(result)
     move_monster(result)
     result

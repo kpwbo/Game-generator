@@ -41,7 +41,7 @@ class Map
     neighs
   end
 
-  def generate_path(start_x, start_y, num_paths=1, door=false, door_x=0, door_y=0)
+  def generate_path(start_x, start_y, num_paths=2, door=false, door_x=0, door_y=0)
     @exits[[door_x, door_y]] = 0 unless door == false
     (0...num_paths).each do
       current_cell = Cell.new(start_x,start_y)

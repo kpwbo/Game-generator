@@ -6,6 +6,7 @@ def initialize_screen
   noecho
   crmode
   cbreak
+  raw
   stdscr.keypad(true)
   setpos(0,0)
 end
@@ -62,8 +63,12 @@ def show_menu
     cmd = getch
     case cmd
     when "1" then return
-    when "2" then show_credits
-    when "3" then exit 0
+    when "2"
+      Sound.play("ok.wav", Sound::ASYNC)
+      show_credits
+    when "3"
+      Sound.play("ok.wav")
+      exit 0
     end
   }
 end
