@@ -2,20 +2,24 @@ require_relative "Game"
 require "win32/sound"
 include Win32
 
-MAX_SIZE = 24 # even number, the map is a "square"
-MONSTER_MOVEMENT_PER_TURN = 1 # number of steps taken by the monster every turn. If 0, the monster doesn't move.
+MAX_SIZE = 50 # even number, the map is a "square"
+MONSTER_MOVEMENT_PER_TURN = 3 # the higher the number, the more difficult the game is
 
 # How the characters look like
-WALL_CHAR = "#"
+WALL_CHAR = " "
 EMPTY_CHAR = " "
 GROUND_CHAR = "."
-V_BORDER_CHAR = "#"
-H_BORDER_CHAR = "#"
-C_BORDER_CHAR = "#"
+V_BORDER_CHAR = " "
+H_BORDER_CHAR = " "
+C_BORDER_CHAR = " "
 USER_CHAR = "@"
 EXIT_CHAR = "x"
 MONSTER_CHAR = "O"
 ENTRANCE_CHAR = "!"
+
+# HIGHSCORE
+$highscore = 0
+$name = ""
 
 initialize_screen
 
@@ -24,15 +28,19 @@ loop do
   Sound.play("romans.wav")
   game = Game.new
   game.print_map
-  #Sound.play("038-Dungeon04.wav", Sound::ASYNC|Sound::LOOP)
   Thread.new {
       Sound.play("dungeon.wav", Sound::ASYNC | Sound::LOOP)
     }
   loop do
     result = game.play_turn
     if result.first == "game over"
+      getname = false
+      if game.current_map > $highscore
+        $highscore = game.current_map
+        getname = true
+      end
       Sound.play("falling.wav", Sound::ASYNC)
-      game.game_over
+      game.game_over(getname)
       break
     elsif result.first == "change map"
       #Sound.play("apert2.wav", Sound::ASYNC)
@@ -45,7 +53,9 @@ loop do
       game.print_map
     elsif result.first == "user moved"
       setpos(game.user_x, 30+game.user_y)
-      addstr(USER_CHAR)
+      attron(color_pair(3)) {
+            addstr(USER_CHAR)
+          }
     end
   end
 end

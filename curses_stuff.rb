@@ -9,6 +9,12 @@ def initialize_screen
   raw
   stdscr.keypad(true)
   setpos(0,0)
+  start_color
+  init_pair(1,COLOR_BLUE,COLOR_CYAN) # WALL, #V_BORDER, #H_BORDER, #C_BORDER
+  init_pair(2,COLOR_WHITE,COLOR_RED) # MONSTER
+  init_pair(3,COLOR_WHITE,COLOR_GREEN) # USER
+  init_pair(4,COLOR_WHITE,COLOR_BLACK) # EMPTY
+  init_pair(5,COLOR_WHITE,COLOR_YELLOW) # EXIT, ENTRANCE
 end
 
 def show_map(map)
@@ -20,16 +26,43 @@ def show_map(map)
     setpos(i, 30)
     row.each do |cell|
       case cell.status
-        when 0 then addstr(WALL_CHAR)
-        when 1 then addstr(EMPTY_CHAR)
+        when 0
+          attron(color_pair(1)) {
+            addstr(WALL_CHAR)
+          }
+        when 1
+          attron(color_pair(4)) {
+            addstr(EMPTY_CHAR)
+          }
         when 2 then addstr(GROUND_CHAR)
-        when 3 then addstr(V_BORDER_CHAR)
-        when 4 then addstr(H_BORDER_CHAR)
-        when 5 then addstr(C_BORDER_CHAR)
-        when 6 then addstr(USER_CHAR)
-        when 7 then addstr(EXIT_CHAR)
-        when 8 then addstr(MONSTER_CHAR)
-        when 9 then addstr(ENTRANCE_CHAR)
+        when 3
+          attron(color_pair(1)) {
+            addstr(V_BORDER_CHAR)
+          }
+        when 4
+          attron(color_pair(1)) {
+            addstr(H_BORDER_CHAR)
+          }
+        when 5
+          attron(color_pair(1)) {
+            addstr(C_BORDER_CHAR)
+          }
+        when 6
+          attron(color_pair(3)) {
+            addstr(USER_CHAR)
+          }
+        when 7
+          attron(color_pair(5)) {
+            addstr(EXIT_CHAR)
+          }
+        when 8
+          attron(color_pair(2)) {
+            addstr(MONSTER_CHAR)
+          }
+        when 9
+          attron(color_pair(5)) {
+            addstr(ENTRANCE_CHAR)
+          }
       end
     end
     addstr("\n")
@@ -38,12 +71,19 @@ def show_map(map)
   refresh
 end
 
-def show_game_over
+def show_game_over(getname)
   clear
   setpos((lines-5)/2,(cols-10)/2)
   addstr("GAME OVER")
-  refresh
-  getch
+  setpos((lines-5)/2+2,(cols-10)/2)
+  if getname
+    addstr("Enter your name : ")
+    echo
+    $name = getstr
+    noecho
+  else
+    getch
+  end
 end
 
 def show_menu
@@ -58,6 +98,10 @@ def show_menu
   addstr("2 - Credits")
   setpos(y + 3, x)
   addstr("3 - Quit")
+  setpos(y + 5, x)
+  addstr("Highscore : #{$highscore}")
+  setpos(y + 6, x)
+  addstr("Name : #{$name}")
   refresh
   loop {
     cmd = getch

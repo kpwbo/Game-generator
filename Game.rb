@@ -166,7 +166,10 @@ class Game
       @monster_x = new_monster.coord.x
       @monster_y = new_monster.coord.y
       setpos(@monster_x, 30+@monster_y)
-      addstr(MONSTER_CHAR)
+      attron(color_pair(2)) {
+        addstr(MONSTER_CHAR)
+      }
+      refresh
       @maps[@current_map].cells[@monster_x][@monster_y].status = MONSTER
       if @monster_x == @user_x && @monster_y == @user_y
         result[0] = "game over"
@@ -177,8 +180,19 @@ class Game
   def play_turn
     result = []
     #print_map
-    move_user(result)
-    move_monster(result)
+    done = false
+    a = Thread.new {
+      move_user(result)
+      done = true
+    }
+    b = Thread.new {
+      loop {
+        move_monster(result)
+        sleep 0.1
+        break if done == true || result.first == "game over"
+      }
+    }
+    a.join
     result
   end
 
@@ -186,8 +200,8 @@ class Game
     show_map(@maps[@current_map])
   end
 
-  def game_over
-    show_game_over
+  def game_over(getname)
+    show_game_over(getname)
   end
 
 end
