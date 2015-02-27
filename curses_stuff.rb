@@ -108,10 +108,8 @@ def show_menu
     case cmd
     when "1" then return
     when "2"
-      Sound.play("ok.wav", Sound::ASYNC)
       show_credits
     when "3"
-      Sound.play("ok.wav")
       exit 0
     end
   }
@@ -132,4 +130,33 @@ def show_credits
   refresh
   getch
   show_menu
+end
+
+def pick_difficulty
+  clear
+  y = (lines-5)/2
+  x = (cols-10)/2
+  setpos(y,x)
+  addstr("Pick a difficulty :")
+  setpos(y+2,x)
+  addstr("1 - Easy")
+  setpos(y+3,x)
+  addstr("2 - Medium")
+  setpos(y+4,x)
+  addstr("3 - Hard")
+  refresh
+  loop {
+    cmd = getch
+    case cmd
+      when "1"
+        $monster_speed = 1
+        break
+      when "2"
+        $monster_speed = 2
+        break
+      when "3"
+        $monster_speed = 3
+        break
+    end
+  }
 end

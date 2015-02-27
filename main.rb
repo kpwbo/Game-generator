@@ -1,9 +1,7 @@
 require_relative "Game"
-require "win32/sound"
-include Win32
 
-MAX_SIZE = 50 # even number, the map is a "square"
-MONSTER_MOVEMENT_PER_TURN = 3 # the higher the number, the more difficult the game is
+MAX_SIZE = 24 # even number, the map is a "square"
+$monster_speed = 1 # the higher the number, the more difficult the game is
 
 # How the characters look like
 WALL_CHAR = " "
@@ -25,12 +23,9 @@ initialize_screen
 
 loop do
   show_menu
-  Sound.play("romans.wav")
+  pick_difficulty
   game = Game.new
   game.print_map
-  Thread.new {
-      Sound.play("dungeon.wav", Sound::ASYNC | Sound::LOOP)
-    }
   loop do
     result = game.play_turn
     if result.first == "game over"
@@ -39,11 +34,9 @@ loop do
         $highscore = game.current_map
         getname = true
       end
-      Sound.play("falling.wav", Sound::ASYNC)
       game.game_over(getname)
       break
     elsif result.first == "change map"
-      #Sound.play("apert2.wav", Sound::ASYNC)
       game.clear_current_map
       game.current_map = result[1]
       game.user_x = result[2]

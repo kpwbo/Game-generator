@@ -147,33 +147,31 @@ class Game
   def move_monster(result)
     previous_monster_x = @monster_y
     previous_monster_y = @monster_x
-    (1..MONSTER_MOVEMENT_PER_TURN).each do |i|
-      monster_possibilities = @maps[@current_map].find_neighbours(Cell.new(@monster_x,@monster_y))
-      monster_possibilities.delete_if { |item|
-        item.status == WALL
-      }
-      monster_possibilities.delete_if { |item| item.coord.x == previous_monster_x && item.coord.y == previous_monster_y } unless monster_possibilities.count <= 1
+    monster_possibilities = @maps[@current_map].find_neighbours(Cell.new(@monster_x,@monster_y))
+    monster_possibilities.delete_if { |item|
+      item.status == WALL
+    }
+    monster_possibilities.delete_if { |item| item.coord.x == previous_monster_x && item.coord.y == previous_monster_y } unless monster_possibilities.count <= 1
+    new_monster = monster_possibilities.sample
+    loop {
+      break if new_monster.status != WALL
       new_monster = monster_possibilities.sample
-      loop {
-        break if new_monster.status != WALL
-        new_monster = monster_possibilities.sample
-      }
-      @maps[@current_map].cells[@monster_x][@monster_y].status = GROUND
-      previous_monster_x = @monster_x
-      previous_monster_y = @monster_y
-      setpos(@monster_x, 30+@monster_y)
-      addstr(GROUND_CHAR)
-      @monster_x = new_monster.coord.x
-      @monster_y = new_monster.coord.y
-      setpos(@monster_x, 30+@monster_y)
-      attron(color_pair(2)) {
-        addstr(MONSTER_CHAR)
-      }
-      refresh
-      @maps[@current_map].cells[@monster_x][@monster_y].status = MONSTER
-      if @monster_x == @user_x && @monster_y == @user_y
-        result[0] = "game over"
-      end
+    }
+    @maps[@current_map].cells[@monster_x][@monster_y].status = GROUND
+    previous_monster_x = @monster_x
+    previous_monster_y = @monster_y
+    setpos(@monster_x, 30+@monster_y)
+    addstr(GROUND_CHAR)
+    @monster_x = new_monster.coord.x
+    @monster_y = new_monster.coord.y
+    setpos(@monster_x, 30+@monster_y)
+    attron(color_pair(2)) {
+      addstr(MONSTER_CHAR)
+    }
+    refresh
+    @maps[@current_map].cells[@monster_x][@monster_y].status = MONSTER
+    if @monster_x == @user_x && @monster_y == @user_y
+      result[0] = "game over"
     end
   end
 
@@ -188,7 +186,7 @@ class Game
     b = Thread.new {
       loop {
         move_monster(result)
-        sleep 0.1
+        sleep 0.1/$monster_speed
         break if done == true || result.first == "game over"
       }
     }
